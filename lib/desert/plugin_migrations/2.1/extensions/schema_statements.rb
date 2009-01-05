@@ -2,7 +2,7 @@ ActiveRecord::ConnectionAdapters::SchemaStatements.module_eval do
   def initialize_schema_migrations_table_with_plugins
     initialize_schema_migrations_table_without_plugins
 
-    begin
+    unless ActiveRecord::Base.connection.table_exists?(Desert::PluginMigrations::Migrator.schema_migrations_table_name)
       execute "CREATE TABLE #{Desert::PluginMigrations::Migrator.schema_migrations_table_name} (plugin_name #{type_to_sql(:string)}, version #{type_to_sql(:string)})"
       plugins_and_versions = select_all("SELECT plugin_name, version from #{Desert::PluginMigrations::Migrator.schema_info_table_name}")
       plugins_and_versions.each do |plugin_data|
@@ -22,8 +22,6 @@ ActiveRecord::ConnectionAdapters::SchemaStatements.module_eval do
           execute insert_sql
         end
       end
-    rescue ActiveRecord::StatementInvalid
-      # Schema has been initialized
     end
   end
   alias_method_chain :initialize_schema_migrations_table, :plugins
