@@ -8,4 +8,5 @@ if ActiveRecord::ConnectionAdapters::SchemaStatements.instance_methods.include?(
 else
   require "#{dir}/plugin_migrations/2.1/migrator"
   require "#{dir}/plugin_migrations/2.1/extensions/schema_statements"
+  require "#{dir}/plugin_migrations/2.1/extensions/base_migration"
 end
