@@ -7,18 +7,14 @@ ActiveRecord::Migrator.class_eval do
         target = migrations.detect { |m| m.version == @target_version }
         if target.nil?
             # Pick the oldest migration for this version
-            new_target = -1
+            new_target = 0
             migrations.each {|m|
                 if m.version > new_target and m.version <= @target_version
                     new_target = m.version
                 end
             }
 
-            if new_target > -1
-                @target_version = new_target
-            else
-                @target_version = current_version
-            end
+            @target_version = new_target
         end
     end
 
